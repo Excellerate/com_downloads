@@ -33,7 +33,7 @@ class Com_DownloadsInstallerScript
    */
   function uninstall($parent) 
   {
-    echo '<p>' . JText::_('COM_HELLOWORLD_UNINSTALL_TEXT') . '</p>';
+    echo '<p>' . JText::_('COM_DOWNLOAD_UNINSTALL_TEXT') . '</p>';
   }
  
   /**
@@ -44,7 +44,7 @@ class Com_DownloadsInstallerScript
   function update($parent) 
   {
     // $parent is the class calling this method
-    echo '<p>' . JText::sprintf('COM_HELLOWORLD_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
+    echo '<p>' . JText::sprintf('COM_DOWNLOAD_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
   }
  
   /**
@@ -56,7 +56,7 @@ class Com_DownloadsInstallerScript
   {
     // $parent is the class calling this method
     // $type is the type of change (install, update or discover_install)
-    echo '<p>' . JText::_('COM_HELLOWORLD_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+    echo '<p>' . JText::_('COM_DOWNLOAD_PREFLIGHT_' . $type . '_TEXT') . '</p>';
   }
  
   /**
@@ -68,6 +68,6 @@ class Com_DownloadsInstallerScript
   {
     // $parent is the class calling this method
     // $type is the type of change (install, update or discover_install)
-    echo '<p>' . JText::_('COM_HELLOWORLD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+    echo '<p>' . JText::_('COM_DOWNLOAD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
   }
 }
