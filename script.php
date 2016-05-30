@@ -23,7 +23,7 @@ class Com_DownloadsInstallerScript
   function install($parent) 
   {
     // $parent is the class calling this method
-    $parent->getParent()->setRedirectURL('index.php?option=com_helloworld');
+    $parent->getParent()->setRedirectURL('index.php?option=com_downloads');
   }
  
   /**
