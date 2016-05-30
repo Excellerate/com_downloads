@@ -9,22 +9,27 @@
   <license>Excellerate</license>
   <version>0.0.2</version>
   <description>COM_DOWNLOADS_DESCRIPTION</description>
+  
   <scriptfile>script.php</scriptfile>
+  
   <install>
     <sql>
       <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
     </sql>
   </install>
+  
   <uninstall>
     <sql>
       <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
     </sql>
   </uninstall>
+  
   <update>
     <schemas>
       <schemapath type="mysql">sql/updates/mysql</schemapath>
     </schemas>
   </update>
+  
   <files folder="site">
     <filename>index.html</filename>
     <filename>downloads.php</filename>
@@ -32,11 +37,15 @@
     <folder>views</folder>
     <folder>models</folder>
   </files>
+  
   <languages folder="site/language">
     <language tag="en-GB">en-GB/en-GB.com_downloads.ini</language>
   </languages>
+  
   <administration>
-    <menu link='index.php?option=com_downloads'>Hello World!</menu>
+    
+    <menu link='index.php?option=com_downloads'>COM_DOWNLOADS</menu>
+    
     <files folder="admin">
       <filename>index.html</filename>
       <filename>downloads.php</filename>
@@ -47,9 +56,16 @@
       <folder>views</folder>
       <folder>controllers</folder>
     </files>
+    
     <languages folder="admin/language">
       <language tag="en-GB">en-GB/en-GB.com_downloads.ini</language>
       <language tag="en-GB">en-GB/en-GB.com_downloads.sys.ini</language>
     </languages>
+  
   </administration>
+
+<updateservers>
+  <server type="extension" priority="1" name="Downloads Updates"><![CDATA[https://raw.githubusercontent.com/Excellerate/com_downloads/develop/update.xml]]></server>
+</updateservers>
+
 </extension>
