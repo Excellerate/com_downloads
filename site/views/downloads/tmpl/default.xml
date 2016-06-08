@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
+  
   <layout title="COM_DOWNLOADS_DOWNLOADS_VIEW_DEFAULT_TITLE">
     <message>COM_DOWNLOADS_DOWNLOADS_VIEW_DEFAULT_DESC</message>
   </layout>
-  <fields
-      name="request"
-      addfieldpath="/administrator/components/com_downloads/models/fields"
-      >
-      <fieldset name="request">
+  
+  <fields name="request">  
+    <fieldset name="request">
+      <field
+        name="folder"
+        type="folderlist"
+        label="COM_DOWNLOADS_DOWNLOADS_FIELD_FOLDER_LABEL"
+        description="COM_DOWNLOADS_DOWNLOADS_FIELD_FOLDER_DESC"
+        directory="images"
+        required="required"
+        >
+      </field>
+      <field
+        name="no_robots"
+        type="list"
+        label="COM_DOWNLOADS_DOWNLOADS_FIELD_ROBOTS_LABEL"
+        description="COM_DOWNLOADS_DOWNLOADS_FIELD_ROBOTS_DESC"
+        default="1">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </field>
+    </fieldset>
+    
+
+      <fieldset name="properties">
         <field
-          name="id"
-          type="downloads"
-          label="COM_DOWNLOADS_DOWNLOADS_FIELD_GREETING_LABEL"
-          description="COM_DOWNLOADS_DOWNLOADS_FIELD_GREETING_DESC"
-          />
-      </fieldset>
-    </fields>
-  <fields name="request">
-      <fieldset name="request">
-        <field
-            name="id"
-            type="list"
-            label="COM_DOWNLOADS_DOWNLOADS_FIELD_GREETING_LABEL"
-            description="COM_DOWNLOADS_DOWNLOADS_FIELD_GREETING_DESC"
-            default="1">
-            <option value="1">Hello World!</option>
-            <option value="2">Good bye World!</option>
+          name="before"
+          type="textarea"
+          label="COM_DOWNLOADS_DOWNLOADS_FIELD_BEFORE_LABEL"
+          description="COM_DOWNLOADS_DOWNLOADS_FIELD_BEFORE_DESC"
+          filter="raw"
+          rows="5"
+          >
         </field>
+        <field
+          name="after"
+          type="textarea"
+          label="COM_DOWNLOADS_DOWNLOADS_FIELD_AFTER_LABEL"
+          description="COM_DOWNLOADS_DOWNLOADS_FIELD_AFTER_DESC"
+          filter="raw"
+          rows="5"
+          >
+        </field> 
       </fieldset>
-    </fields>
+
+
+  </fields>
 </metadata>

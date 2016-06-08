@@ -15,14 +15,28 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @since  0.0.1
  */
-class DownloadsViewHDownloads extends JViewLegacy
+class DownloadsViewDownloads extends JViewLegacy
 {
   /**
-   * View form
+   * An array of items
    *
-   * @var         form
+   * @var  array
    */
-  protected $form = null;
+  protected $items;
+
+  /**
+   * The pagination object
+   *
+   * @var  JPagination
+   */
+  protected $pagination;
+
+  /**
+   * The model state
+   *
+   * @var  object
+   */
+  protected $state;
  
   /**
    * Display the Hello World view
@@ -33,20 +47,25 @@ class DownloadsViewHDownloads extends JViewLegacy
    */
   public function display($tpl = null)
   {
-    // Get the Data
-    $this->form = $this->get('Form');
-    $this->item = $this->get('Item');
+    // Get application
+    $app = JFactory::getApplication();
+    $context = "downloads.list.admin.downloads";
+    // Get data from the model
+    $this->items            = $this->get('Items');
+    $this->pagination       = $this->get('Pagination');
+    $this->state            = $this->get('State');
+    $this->filter_order     = $app->getUserStateFromRequest($context.'filter_order', 'filter_order', 'file', 'cmd');
+    $this->filter_order_Dir = $app->getUserStateFromRequest($context.'filter_order_Dir', 'filter_order_Dir', 'asc', 'cmd');
+    $this->filterForm       = $this->get('FilterForm');
+    $this->activeFilters    = $this->get('ActiveFilters');
  
     // Check for errors.
-    if (count($errors = $this->get('Errors')))
-    {
+    if (count($errors = $this->get('Errors'))){
       JError::raiseError(500, implode('<br />', $errors));
- 
       return false;
     }
  
- 
-    // Set the toolbar
+    // Set the toolbar and number of found items
     $this->addToolBar();
  
     // Display the template
@@ -55,7 +74,7 @@ class DownloadsViewHDownloads extends JViewLegacy
     // Set the document
     $this->setDocument();
   }
- 
+
   /**
    * Add the page title and toolbar.
    *
@@ -65,28 +84,21 @@ class DownloadsViewHDownloads extends JViewLegacy
    */
   protected function addToolBar()
   {
-    $input = JFactory::getApplication()->input;
+    // Set title
+    $title = JText::_('COM_DOWNLOADS_MANAGER');
  
-    // Hide Joomla Administrator Main menu
-    $input->set('hidemainmenu', true);
- 
-    $isNew = ($this->item->id == 0);
- 
-    if ($isNew)
-    {
-      $title = JText::_('COM_HELLOWORLD_MANAGER_HELLOWORLD_NEW');
+    // Add total number of downloads to title 
+    if ($this->pagination->total){
+      $title .= " <span style='font-size: 0.5em; vertical-align: middle;'>(" . $this->pagination->total . ")</span>";
     }
-    else
-    {
-      $title = JText::_('COM_HELLOWORLD_MANAGER_HELLOWORLD_EDIT');
-    }
- 
-    JToolBarHelper::title($title, 'helloworld');
-    JToolBarHelper::save('helloworld.save');
-    JToolBarHelper::cancel(
-      'helloworld.cancel',
-      $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE'
-    );
+
+    // Set toolbar options
+    JToolBarHelper::title($title, 'downloads');
+
+    // Get and set an export toolbar option
+    $bar = JToolbar::getInstance('toolbar');
+    $bar->appendButton('Popup', 'download', 'JTOOLBAR_EXPORT', 'index.php?option=com_downloads&amp;view=downloads&amp;layout=export&tmpl=component', 300, 300);
+    $bar->appendButton('Confirm', 'This can not be undone!', 'delete', 'Delete', 'downloads.delete', false);
   }
   /**
    * Method to set up the document properties
@@ -95,9 +107,7 @@ class DownloadsViewHDownloads extends JViewLegacy
    */
   protected function setDocument() 
   {
-    $isNew = ($this->item->id < 1);
     $document = JFactory::getDocument();
-    $document->setTitle($isNew ? JText::_('COM_HELLOWORLD_HELLOWORLD_CREATING') :
-                JText::_('COM_HELLOWORLD_HELLOWORLD_EDITING'));
+    $document->setTitle(JText::_('COM_DOWNLOADS_ADMINISTRATION'));
   }
 }

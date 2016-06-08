@@ -10,11 +10,11 @@
 defined('_JEXEC') or die('Restricted access');
  
 /**
- * HelloWorldList Model
+ * Downloads Model
  *
  * @since  0.0.1
  */
-class HelloWorldModelHelloWorlds extends JModelList
+class DownloadsModelDownloads extends JModelList
 {
   /**
    * Constructor.
@@ -29,9 +29,11 @@ class HelloWorldModelHelloWorlds extends JModelList
     if (empty($config['filter_fields']))
     {
       $config['filter_fields'] = array(
-        'id',
-        'greeting',
-        'published'
+        'file',
+        'name',
+        'email',
+        'count',
+        'updated_at'
       );
     }
  
@@ -43,43 +45,68 @@ class HelloWorldModelHelloWorlds extends JModelList
    *
    * @return      string  An SQL query
    */
-  protected function getListQuery()
+  public function getListQuery()
+  {
+    $this->state = $this->getState();
+
+    // Initialize variables.
+    $db    = JFactory::getDbo();
+    $query = $db->getQuery(true);
+ 
+    // Create the base select statement.
+    $query->select('*, DATE_FORMAT(FROM_UNIXTIME(`updated_at`), \'%e %b %Y\') AS `updated_at_formated`')->from($db->quoteName('#__downloads'));
+ 
+    // Filter: like / search @todo
+    $search = $this->getState('filter.search');
+    if ( ! empty($search)){
+      $like = $db->quote('%' . $search . '%');
+      $query->where('file LIKE ' . $like);
+    }
+ 
+    // Add the list ordering clause.
+    $orderCol = $this->state->get('list.ordering', 'file');
+    $orderDirn  = $this->state->get('list.direction', 'asc');
+    
+    $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+ 
+    return $query;
+  }
+
+  public function getExport()
   {
     // Initialize variables.
     $db    = JFactory::getDbo();
     $query = $db->getQuery(true);
  
     // Create the base select statement.
-    $query->select('*')
-        ->from($db->quoteName('#__helloworld'));
- 
-    // Filter: like / search
-    $search = $this->getState('filter.search');
- 
-    if (!empty($search))
-    {
-      $like = $db->quote('%' . $search . '%');
-      $query->where('greeting LIKE ' . $like);
-    }
- 
-    // Filter by published state
-    $published = $this->getState('filter.published');
- 
-    if (is_numeric($published))
-    {
-      $query->where('published = ' . (int) $published);
-    }
-    elseif ($published === '')
-    {
-      $query->where('(published IN (0, 1))');
-    }
- 
-    // Add the list ordering clause.
-    $orderCol = $this->state->get('list.ordering', 'greeting');
-    $orderDirn  = $this->state->get('list.direction', 'asc');
- 
-    $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
- 
-    return $query;
+    $query->select('`file`,`name`,`email`,`count`,DATE_FORMAT(FROM_UNIXTIME(`updated_at`), \'%e %b %Y\') AS `updated_at_formated`')->from($db->quoteName('#__downloads'));
+    $db->setQuery($query);
+    $results = $db->loadObjectList();
+    
+    // Done
+    return $results;
+  }
+
+  public function delete()
+  {
+    // Gather posted CIDS to delete
+    $app = JFactory::getApplication();
+    $cids = $app->input->get('cid');
+
+    // Fire up database
+    $db = JFactory::getDbo();
+    $query = $db->getQuery(true);
+     
+    // Delete all selected files
+    $conditions = array(
+        $db->quoteName('id') . ' IN ('.implode(',',$cids).')', 
+    );
+     
+    $query->delete($db->quoteName('#__downloads'));
+    $query->where($conditions);
+     
+    $db->setQuery($query);
+     
+    $result = $db->execute();
   }
 }

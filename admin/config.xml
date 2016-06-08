@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <fieldset
+    name="standard"
+    label="Settings"
+    description="">
+    <field 
+      type="list"
+      name="add_extension_resources"
+      label="Load extension resources" 
+      default="yes"
+      description="Load resources like jQuery and Semantic-ui">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+     </field>
+    <field 
+      type="list"
+      name="use_recapture"
+      label="Use Google's reCAPTCHA" 
+      default="yes"
+      description="Use recapture to stop spam bots from downloading your files.">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+     </field>
+  </fieldset>
+  <fieldset
+    name="recapture"
+    label="reCAPTCHA"
+    description="">
+    <field 
+      type="text"
+      name="recapture_key"
+      label="Site key" 
+      description="">
+     </field>
+    <field 
+      type="text"
+      name="recapture_secret"
+      label="Secret key" 
+      description="">
+     </field>
+  </fieldset>
+</config>

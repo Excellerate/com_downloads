@@ -10,77 +10,71 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted Access');
  
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
- 
-$listOrder     = $this->escape($this->filter_order);
-$listDirn      = $this->escape($this->filter_order_Dir);
+
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
+
 ?>
-<form action="index.php?option=com_helloworld&view=helloworlds" method="post" id="adminForm" name="adminForm">
-  <div class="row-fluid">
-    <div class="span6">
-      <?php echo JText::_('COM_HELLOWORLD_HELLOWORLDS_FILTER'); ?>
-      <?php
-        echo JLayoutHelper::render(
-          'joomla.searchtools.default',
-          array('view' => $this)
-        );
-      ?>
-    </div>
-  </div>
-  <table class="table table-striped table-hover">
-    <thead>
-    <tr>
-      <th width="1%"><?php echo JText::_('COM_HELLOWORLD_NUM'); ?></th>
-      <th width="2%">
-        <?php echo JHtml::_('grid.checkall'); ?>
-      </th>
-      <th width="90%">
-        <?php echo JHtml::_('grid.sort', 'COM_HELLOWORLD_HELLOWORLDS_NAME', 'greeting', $listDirn, $listOrder); ?>
-      </th>
-      <th width="5%">
-        <?php echo JHtml::_('grid.sort', 'COM_HELLOWORLD_PUBLISHED', 'published', $listDirn, $listOrder); ?>
-      </th>
-      <th width="2%">
-        <?php echo JHtml::_('grid.sort', 'COM_HELLOWORLD_ID', 'id', $listDirn, $listOrder); ?>
-      </th>
-    </tr>
-    </thead>
-    <tfoot>
-      <tr>
-        <td colspan="5">
-          <?php echo $this->pagination->getListFooter(); ?>
-        </td>
-      </tr>
-    </tfoot>
-    <tbody>
-      <?php if (!empty($this->items)) : ?>
-        <?php foreach ($this->items as $i => $row) :
-          $link = JRoute::_('index.php?option=com_helloworld&task=helloworld.edit&id=' . $row->id);
-        ?>
-          <tr>
-            <td><?php echo $this->pagination->getRowOffset($i); ?></td>
-            <td>
-              <?php echo JHtml::_('grid.id', $i, $row->id); ?>
-            </td>
-            <td>
-              <a href="<?php echo $link; ?>" title="<?php echo JText::_('COM_HELLOWORLD_EDIT_HELLOWORLD'); ?>">
-                <?php echo $row->greeting; ?>
-              </a>
-            </td>
-            <td align="center">
-              <?php echo JHtml::_('jgrid.published', $row->published, $i, 'helloworlds.', true, 'cb'); ?>
-            </td>
-            <td align="center">
-              <?php echo $row->id; ?>
-            </td>
-          </tr>
+
+<form action="<?= JRoute::_('index.php?option=com_downloads&view=downloads'); ?>" method="post" name="adminForm" id="adminForm">
+  <div id="j-main-container" class="span12">
+
+    <?php
+      echo JLayoutHelper::render(
+        'joomla.searchtools.default',
+        array('view' => $this)
+      );
+    ?>
+
+    <?php if (empty($this->items)) : ?>
+      <div class="alert alert-no-items">
+        <?= JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+      </div>
+    <?php else : ?>
+
+    <table class="table table-striped" id="articleList">
+      <thead>
+        <th width="1%" class="nowrap center hidden-phone">#</td>
+        <th width="1%" class="nowrap center hidden-phone"><?= JHtml::_('grid.checkall'); ?></td>
+        <th width="" class="nowrap hidden-phone"><?= JHtml::_('grid.sort', 'File Name', 'file', $listDirn, $listOrder); ?></td>
+        <th width="20%" class="nowrap hidden-phone"><?= JHtml::_('grid.sort', 'Download by', 'name', $listDirn, $listOrder); ?></td>
+        <th width="20%" class="nowrap hidden-phone"><?= JHtml::_('grid.sort', 'Email', 'email', $listDirn, $listOrder); ?></td>
+        <th width="5%" class="nowrap hidden-phone"><?= JHtml::_('grid.sort', 'Count', 'count', $listDirn, $listOrder); ?></td>
+        <th width="5%" class="nowrap hidden-phone"><?= JHtml::_('grid.sort', 'Date', 'updated_at', $listDirn, $listOrder); ?></td>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan=7>
+            <?= $this->pagination->getListFooter(); ?>
+          </td>
+        </tr>
+      </tfoot>
+      <tbody>
+        <?php foreach($this->items as $i => $item) : ?>
+        <tr>
+          <td><?= $item->id; ?></td>
+          <td><?= JHtml::_('grid.id', $i, $item->id); ?></td>
+          <td><?= $item->file; ?></td>
+          <td><?= $item->name; ?></td>
+          <td><?= $item->email; ?></td>
+          <td><?= $item->count; ?></td>
+          <td><?= $item->updated_at_formated; ?></td>
+        </tr>
         <?php endforeach; ?>
-      <?php endif; ?>
-    </tbody>
-  </table>
-  <input type="hidden" name="task" value=""/>
-  <input type="hidden" name="boxchecked" value="0"/>
-  <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-  <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-  <?php echo JHtml::_('form.token'); ?>
+      </tbody>
+    </table>
+
+    <?php endif; ?>
+
+  <input type="hidden" name="task" value="" />
+  <input type="hidden" name="boxchecked" value="0" />
+  <input type="hidden" name="filter_order" value="<?= $listOrder; ?>" />
+  <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>" />
+  <?= JHtml::_('form.token'); ?>
+
 </form>
